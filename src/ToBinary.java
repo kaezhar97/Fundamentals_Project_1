@@ -45,11 +45,26 @@ class ToBinary {
    private boolean inSignedRange(int value, int numbits) {
       //************************************************************
       // PUT CODE HERE
-
+      int minBits = this.toUnsigned(value).length()+1; /** The minimum number of bits required to represent a signed number 
+                                                           is the minimum number of bits required to represent its unsigned 
+                                                           version plus one bit for the sign. For example:
+                                                           For a value of 15, the minimum number of bits necessary to represent it
+                                                           in unsigned binary is 4. Therefore, we need one more bit for the signed version.
+                                                           Thus, 5 bits are the minimum required for its signed version.*/
+      
+      if (numbits < minBits)
+      {
+          return false;
+      }
+      
+      else 
+      {
+          return true;
+      }
       // Return true if the passed value can be represented in the specified number of bits
       // for Two's complement
       //************************************************************
-      return true;
+      
    }
 
    // Two's Complement
