@@ -45,7 +45,7 @@ class ToBinary {
    private boolean inSignedRange(int value, int numbits) {
       //************************************************************
       // PUT CODE HERE
-      int minBits = this.toUnsigned(value).length()+1; /** The minimum number of bits required to represent a signed number 
+      int minBits = this.toUnsigned(Math.abs(value)).length()+1; /** The minimum number of bits required to represent a signed number 
                                                            is the minimum number of bits required to represent its unsigned 
                                                            version plus one bit for the sign. For example:
                                                            For a value of 15, the minimum number of bits necessary to represent it
@@ -73,24 +73,27 @@ class ToBinary {
       if (!inSignedRange(value, numbits))
          return "OVERFLOW";
       else {
-         // Normally, we flip the bits and add one
-         // But binary addition is a bit difficult to program.
-         // Suggest, subtract one from value and then flip the bits.
-
-         //*************************************************************
-         // PUT CODE HERE
-         // 
-         // If the value is negative, convert it to the positive value
-         // you want to convert before flipping
-         //*************************************************************
+          boolean isNeg = false;    /* Stores whether or not the value is a 
+                                       negative number. */
+          
+          //Checks if the value is a negative number
+          if (value < 0)
+          {
+              value = value + 1;           //If yes, add 1 to the value and
+              value = Math.abs(value);     //make the value positive
+              isNeg = true;                 //The value is a negative number.
+          }
+        
+         //Stores the unflipped signed binary version
          String result = zeroPadFront(toUnsigned(value), numbits);
+         
+         // Checks if the value was negative
+         if (isNeg)
+         {
+             result = flipBits(result); // if it was, the bits are flipped
+         }
 
-         //*************************************************************
-         // PUT CODE HERE
-         //
-         // If the value was negative, flip the bits
-         //*************************************************************
-         return result;
+         return result;     //Returns the Signed Binary 
       }
    }
 
