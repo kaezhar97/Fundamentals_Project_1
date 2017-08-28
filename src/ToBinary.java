@@ -30,14 +30,19 @@ class ToBinary {
    // Unsigned
    public String toUnsigned(int value) {
       String result = "";
+      int count = 0;
+      Stack<Integer> values = new Stack<>();
       do {
-         //****************************************************
-         // PUT CODE HERE
-         // Append remainder to result
-         // Divide by 2
-         //****************************************************
+         int reminder = value % 2;
+         value = value / 2;
+         count++;
+         values.push(reminder);
       }
       while (value != 0);
+      
+      while(!values.isEmpty()){
+          result += Integer.toString(values.pop());
+      }
 
       return result;
    }
