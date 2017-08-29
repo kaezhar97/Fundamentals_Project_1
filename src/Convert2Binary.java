@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Convert2Binary {
-   public static void main(String[] args) {
+  public static void main(String[] args) {
       int selection = 0;
       ToBinary converter = new ToBinary();
       Scanner scan = new Scanner(System.in);

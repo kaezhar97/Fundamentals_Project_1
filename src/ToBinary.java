@@ -1,3 +1,6 @@
+
+import java.util.Stack;
+
 class ToBinary {
    // Constructor
    public ToBinary() {}
@@ -37,7 +40,7 @@ class ToBinary {
          value = value / 2;
          count++;
          values.push(reminder);
-      }
+      } 
       while (value != 0);
       
       while(!values.isEmpty()){
@@ -107,6 +110,12 @@ class ToBinary {
       // Helpful variables
       String sign, mantissa, exponent;
 
+      
+      if (value<0)
+      {
+          sign ="negative";
+      }
+      
       //*****************************************************
       // PUT CODE HERE
       // 
