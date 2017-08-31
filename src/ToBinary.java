@@ -1,4 +1,3 @@
-
 import java.util.Stack;
 
 class ToBinary {
@@ -33,12 +32,12 @@ class ToBinary {
    // Unsigned
    public String toUnsigned(int value) {
       String result = "";
-      
+      int count = 0;
       Stack<Integer> values = new Stack<>();
       do {
          int reminder = value % 2;
          value = value / 2;
-        
+         count++;
          values.push(reminder);
       } 
       while (value != 0);
@@ -105,41 +104,37 @@ class ToBinary {
       }
    }
 
+   // Floating Point
    public String toFloat(float value) {
       // Helpful variables
       String sign, mantissa, exponent;
-      
-      if (value >= 0)
-      {
-          sign = "0";
-      }
-      else
-      {
-          sign = "1";
-      }
 
+      
+      if (value<0)
+      {
+          sign ="negative";
+      }
+      
+      //*****************************************************
+      // PUT CODE HERE
+      // 
+      // Set sign bit to "0" or "1" based on value
+      
+       if(value <0 )
+          sign = "1";
+      else
+          sign = "0";
+      //*****************************************************
       
       // Use toUnsigned() to get integer portion
       String integerPortion = toUnsigned((int) value);
       value -= (int) value;
-      System.out.println(value + "hi");
 
-      float sum = 0;        //The hypothetical sum
-      int power = -1;       //The current power of the decimal value
+      float sum = 0;
+      int power = -1;
       String decimalPortion = "";
 
-      while (sum < value && (integerPortion.length()-1)+decimalPortion.length() <= 23) {            
-          if (sum + Math.pow(2,power) <= value)
-          {
-              sum += Math.pow(2, power);
-              decimalPortion += "1";
-          }
-          
-          else
-          {
-              decimalPortion += "0";
-          }
-          power--;
+      while (sum < value && (integerPortion.length()-1)+decimalPortion.length() <= 23) {
          //************************************************************************************
          // PUT CODE HERE
          //
@@ -148,6 +143,22 @@ class ToBinary {
          // Otherwise append '0'
          // Be sure to decrement your power each time
          //**********************************************************************************
+         
+         sum = (float) Math.pow(2, power);
+         //comparison
+        
+         
+         if(value == sum)
+             decimalPortion = "1";  
+         else if(value > sum){                             //this part has an error that I'm trying to figure it out
+             value = value - sum;                          
+             if (value < sum)
+             decimalPortion = "0";
+             else 
+                 decimalPortion = "1";
+         }
+         
+         power--;
       }
 
       //*************************************************************************************
@@ -155,8 +166,11 @@ class ToBinary {
       // 
       // Compute mantissa.  Everything after the first '1' in the concatenated integer and decimal portions.
       // Be sure to zero-pad
+      String ceros = zeroPadRear(decimalPortion , 23 - decimalPortion.length());
+      integerPortion = integerPortion.substring(1);
+      mantissa = integerPortion + decimalPortion + ceros;
       //************************************************************************************* 
-     mantissa = integerPortion + decimalPortion;
+     
       //*************************************************************************************
       // PUT CODE HERE
       //
@@ -164,10 +178,15 @@ class ToBinary {
       // Then look at the decimal portion.
       // In either case, you want to find the position of the first '1'.
       // Then be sure to bias and zero-pad.
+      
+      int exponentValue = integerPortion.length() - 1;
+      exponentValue = exponentValue + 127;
+      exponent = toUnsigned(exponentValue);
       //*************************************************************************************
-      exponent = "";
-      return sign + mantissa + exponent;
+
+      return sign + " " + mantissa + " " + exponent;
    }
+
   
    // Double Precision
    public String toDouble(double value) {
