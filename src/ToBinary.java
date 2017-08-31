@@ -120,6 +120,11 @@ class ToBinary {
       // PUT CODE HERE
       // 
       // Set sign bit to "0" or "1" based on value
+      
+       if(value <0 )
+          sign = "1";
+      else
+          sign = "0";
       //*****************************************************
       
       // Use toUnsigned() to get integer portion
@@ -139,6 +144,22 @@ class ToBinary {
          // Otherwise append '0'
          // Be sure to decrement your power each time
          //**********************************************************************************
+         
+         sum = (float) Math.pow(2, power);
+         //comparison
+        
+         
+         if(value == sum)
+             decimalPortion = "1";  
+         else if(value > sum){                             //this part has an error that I'm trying to figure it out
+             value = value - sum;                          
+             if (value < sum)
+             decimalPortion = "0";
+             else 
+                 decimalPortion = "1";
+         }
+         
+         power--;
       }
 
       //*************************************************************************************
@@ -146,6 +167,9 @@ class ToBinary {
       // 
       // Compute mantissa.  Everything after the first '1' in the concatenated integer and decimal portions.
       // Be sure to zero-pad
+      String ceros = zeroPadRear(decimalPortion , 23 - decimalPortion.length());
+      integerPortion = integerPortion.substring(1);
+      mantissa = integerPortion + decimalPortion + ceros;
       //************************************************************************************* 
      
       //*************************************************************************************
@@ -155,9 +179,13 @@ class ToBinary {
       // Then look at the decimal portion.
       // In either case, you want to find the position of the first '1'.
       // Then be sure to bias and zero-pad.
+      
+      int exponentValue = integerPortion.length() - 1;
+      exponentValue = exponentValue + 127;
+      exponent = toUnsigned(exponentValue);
       //*************************************************************************************
 
-      return "";//sign + " " + mantissa + " " + exponent;
+      return sign + " " + mantissa + " " + exponent;
    }
 
   
