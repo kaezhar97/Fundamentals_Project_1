@@ -108,85 +108,68 @@ class ToBinary {
    public String toFloat(float value) {
       // Helpful variables
       String sign, mantissa, exponent;
-
       
-      if (value<0)
+      // Checks if the value is positive or negative
+      if (value >= 0)
       {
-          sign ="negative";
-      }
-      
-      //*****************************************************
-      // PUT CODE HERE
-      // 
-      // Set sign bit to "0" or "1" based on value
-      
-       if(value <0 )
-          sign = "1";
-      else
+          //if positive, the sign becomes a "0"
           sign = "0";
-      //*****************************************************
+      }
       
-      // Use toUnsigned() to get integer portion
-      String integerPortion = toUnsigned((int) value);
-      value -= (int) value;
-
-      float sum = 0;
-      int power = -1;
-      String decimalPortion = "";
-
-      while (sum < value && (integerPortion.length()-1)+decimalPortion.length() <= 23) {
-         //************************************************************************************
-         // PUT CODE HERE
-         //
-         // Compute decimal portion of fixed-point
-         // Determine hypothetical sum, if not greater than value append '1' and update sum
-         // Otherwise append '0'
-         // Be sure to decrement your power each time
-         //**********************************************************************************
-         
-         sum = (float) Math.pow(2, power);
-         //comparison
-        
-         
-         if(value == sum)
-             decimalPortion = "1";  
-         else if(value > sum){                             //this part has an error that I'm trying to figure it out
-             value = value - sum;                          
-             if (value < sum)
-             decimalPortion = "0";
-             else 
-                 decimalPortion = "1";
-         }
-         
-         power--;
+      //If negative, the sign becomes a "1" and value becomes positive
+      else
+      {
+          sign = "1";
+          value = Math.abs(value);
       }
 
-      //*************************************************************************************
-      // PUT CODE HERE
-      // 
-      // Compute mantissa.  Everything after the first '1' in the concatenated integer and decimal portions.
-      // Be sure to zero-pad
-      String ceros = zeroPadRear(decimalPortion , 23 - decimalPortion.length());
-      integerPortion = integerPortion.substring(1);
-      mantissa = integerPortion + decimalPortion + ceros;
-      //************************************************************************************* 
-     
-      //*************************************************************************************
-      // PUT CODE HERE
-      //
-      // Compute exponent.  Use the integer portion unless that part is zero,
-      // Then look at the decimal portion.
-      // In either case, you want to find the position of the first '1'.
-      // Then be sure to bias and zero-pad.
       
-      int exponentValue = integerPortion.length() - 1;
-      exponentValue = exponentValue + 127;
-      exponent = toUnsigned(exponentValue);
-      //*************************************************************************************
+      // Stores binary before the decimal point
+      String integerPortion = toUnsigned((int) value);
+      value -= (int) value; //turns the double to just a decimal value
 
-      return sign + " " + mantissa + " " + exponent;
+      float sum = 0;        //The hypothetical sum
+      int power = -1;       //The current power of the decimal value
+      String decimalPortion = "";   //Stores binary after the decimal point
+
+      //Checks if value does not exceed the amount of bits
+      while (sum < value && (integerPortion.length()-1)+decimalPortion.length() <= 23) {     
+          
+          /*If the hypothetical sum is added to the current power after the 
+          decimal point, check if it's less than the value*/
+          if (sum + Math.pow(2,power) <= value)
+          {
+              /*If it is, turn the current power's binary to a 1 and add the 
+              value to the sum*/
+              sum += Math.pow(2, power);
+              decimalPortion += "1";
+          }
+          
+          //Otherwise, leave the current power's binary as a 0.
+          else
+          {
+              decimalPortion += "0";
+          }
+          
+          power--; //Decrement the power        
+      }
+
+     integerPortion = integerPortion.substring(1); // Delete the first number
+     
+     //Combine both portions and pad the mantissa to the appropriate bits
+     mantissa = integerPortion + decimalPortion;
+     mantissa = zeroPadRear(mantissa, 23-mantissa.length());
+    
+     //Make the exponent value equal to the length of the integer portion
+     int exponentValue = integerPortion.length();
+     exponentValue += 127; //Add 127 to the exponentValue
+     
+     //Change the exponent to a binary value
+     exponent = toUnsigned(exponentValue);
+     
+     //Return the toFloat Binary Value 
+     return sign + " " + mantissa + " " + exponent;
    }
-
   
    // Double Precision
    public String toDouble(double value) {
